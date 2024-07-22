@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+
+
+//import 'primereact/resources/themes/bootstrap4-dark-blue/theme.css';
+//import 'primereact/resources/themes/tailwind-light/theme.css';
+import 'primereact/resources/themes/mira/theme.css';
+
+
 import axios from 'axios';
 import CryptoSummary from './components/CryptoSummary';
 import { CryptoModel } from './models/Crypto';
 import moment from 'moment';
+
+import {Dropdown} from 'primereact/dropdown';
 
 import {
   Chart as ChartJS,
@@ -176,6 +185,20 @@ export default function App() {
       </div>
 
       {selected ? <CryptoSummary crypto={selected} /> : null}
+
+      {
+        cryptos ? 
+          <Dropdown 
+            options={cryptos}
+            optionLabel="name"
+            optionValue="id"
+            checkmark={true}
+            editable
+            value={selected} onChange={(e) => setSelected(e.value)}
+          />
+        : null
+      }
+      
 
       {
         data ? 
