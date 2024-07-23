@@ -196,6 +196,7 @@ export default function App() {
               // optionValue="id"
               // checkmark={false}
               filter
+              display="chip"
               value={selected}
               itemTemplate={cryptoOptTemplate}
               // valueTemplate={selectedCryptoTemplate}
