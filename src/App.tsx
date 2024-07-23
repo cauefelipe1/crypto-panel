@@ -162,6 +162,10 @@ export default function App() {
     return <span>{props.placeholder}</span>;
   };
 
+  function updateOwner(crypto: CryptoModel, amount: number): void {
+    console.log(crypto.name, `Amount ${amount}`);
+  }
+
   return (
     <div className="App">
       
@@ -199,6 +203,7 @@ export default function App() {
         return (<CryptoSummary 
                   key={s.id}
                   crypto={s}
+                  updateOwner={updateOwner}
                 />);
       })}
 

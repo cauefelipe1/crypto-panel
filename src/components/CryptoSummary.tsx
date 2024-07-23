@@ -3,10 +3,11 @@ import { CryptoModel } from "../models/Crypto";
 import { InputNumber } from "primereact/inputnumber"
 
 export type Props = {
-    crypto: CryptoModel
+    crypto: CryptoModel;
+    updateOwner: (crypto: CryptoModel, amount: number) => void;
 }
 
-export default function CryptoSummary({crypto} : Props) : JSX.Element {
+export default function CryptoSummary({crypto, updateOwner} : Props) : JSX.Element {
     const [amount, setAmount] = useState(1000);
 
     return (
@@ -19,7 +20,11 @@ export default function CryptoSummary({crypto} : Props) : JSX.Element {
                 mode="decimal"
                 showButtons
                 step={1}
-                onChange={(e) => setAmount(e.value ?? 0)}
+                onChange={(e) => {
+                    const amt = e.value ?? 0
+                    setAmount(amt);
+                    updateOwner(crypto, amt);
+                }}
             />
             <p>$ {(crypto.current_price * amount).toLocaleString(undefined, {minimumFractionDigits: 2 , maximumFractionDigits: 2})}</p>
         </div>
