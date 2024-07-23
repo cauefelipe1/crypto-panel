@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CryptoModel } from "../models/Crypto";
 import { InputNumber } from "primereact/inputnumber"
 
@@ -9,6 +9,10 @@ export type Props = {
 
 export default function CryptoSummary({crypto, updateOwner} : Props) : JSX.Element {
     const [amount, setAmount] = useState(1000);
+
+    useEffect(function initialOwnerUpdate() {
+        updateOwner(crypto, amount);
+    }, []);
 
     return (
         <div>

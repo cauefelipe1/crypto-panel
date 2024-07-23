@@ -65,14 +65,12 @@ export default function App() {
   };
 
   const [cryptos, setCryptos] = useState<CryptoModel[] | null>();
-  
   const [selected, setSelected] = useState<CryptoModel[]>([]);
-
   const [chartIntervalSelected, setChartIntervalSelected] = useState(30);
   const [data, setData] = useState<ChartData<"line">>();
 
-
   const [options, setOptions] = useState<ChartOptions<"line">>(defaultOptions);
+  const [totalCryptAmout, setTotalCryptAmout] = useState(0);
 
   useEffect(function loadCoinsDropDown() {
     const url = baseCoinGeckoUrl + "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
@@ -85,6 +83,18 @@ export default function App() {
       });
       
   }, []);
+
+  useEffect(function calcTotamCryptoAmount() {
+    let temp = 0;
+
+    for (const s of selected) {
+      temp+= (s.owned ?? 0) * s.current_price;
+
+      console.log("calculating: ", s.owned, s.current_price, temp);
+    }
+
+    setTotalCryptAmout(temp);
+  }, [selected])
 
   // useEffect(() => {
   //   async function loadChartData(){
@@ -163,7 +173,14 @@ export default function App() {
   };
 
   function updateOwner(crypto: CryptoModel, amount: number): void {
-    console.log(crypto.name, `Amount ${amount}`);
+    let temp = [...selected];
+    let found = temp.find(c => c.id === crypto.id);
+
+    if (!found)
+      return;
+
+    found.owned = amount
+    setSelected(temp);
   }
 
   return (
@@ -216,7 +233,9 @@ export default function App() {
           </div>
           : null
       } */}
-      
+
+      <p>Your portifolio worth is: ${totalCryptAmout.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+
     </div>
   );
 }

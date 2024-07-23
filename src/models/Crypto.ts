@@ -26,4 +26,6 @@ export type CryptoModel = {
     atl_date: string
     roi: any
     last_updated: string
+
+    owned: number;
   }
