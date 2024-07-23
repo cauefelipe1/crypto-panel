@@ -12,7 +12,8 @@ import CryptoSummary from './components/CryptoSummary';
 import { CryptoModel } from './models/Crypto';
 import moment from 'moment';
 
-import {Dropdown} from 'primereact/dropdown';
+import { Dropdown } from 'primereact/dropdown';
+import { MultiSelect } from 'primereact/multiselect';
 
 import {
   Chart as ChartJS,
@@ -64,7 +65,9 @@ export default function App() {
   };
 
   const [cryptos, setCryptos] = useState<CryptoModel[] | null>();
-  const [selected, setSelected] = useState<CryptoModel | null>();
+  
+  const [selected, setSelected] = useState<CryptoModel[]>([]);
+
   const [chartIntervalSelected, setChartIntervalSelected] = useState(30);
   const [data, setData] = useState<ChartData<"line">>();
 
@@ -83,59 +86,60 @@ export default function App() {
       
   }, []);
 
-  useEffect(() => {
-    async function loadChartData(){
-      if (!selected)
-        return;
+  // useEffect(() => {
+  //   async function loadChartData(){
+  //     if (!selected)
+  //       return;
 
-      const interval = chartIntervalSelected > 1 ? "&interval=daily" : "";
+  //     const interval = chartIntervalSelected > 1 ? "&interval=daily" : "";
 
-      const url = baseCoinGeckoUrl + `coins/${selected.id}/market_chart?vs_currency=usd&days=${chartIntervalSelected}${interval}`;
+  //     const url = baseCoinGeckoUrl + `coins/${selected.id}/market_chart?vs_currency=usd&days=${chartIntervalSelected}${interval}`;
 
-      try{
-        const marketData = await axios.get(url)
+  //     try{
+  //       const marketData = await axios.get(url)
         
-        const labels = marketData.data.prices.map((price: number[]) => {
-          const date = moment.unix(price[0] / 1000);
+  //       const labels = marketData.data.prices.map((price: number[]) => {
+  //         const date = moment.unix(price[0] / 1000);
 
-          if (chartIntervalSelected == 1)
-            return date.format('LT');
+  //         if (chartIntervalSelected == 1)
+  //           return date.format('LT');
           
-          return date.format('MM-DD-YYYY');
-        });
+  //         return date.format('MM-DD-YYYY');
+  //       });
 
-        setData({
-          labels,
-          datasets: [
-            {
-              ...defaultDataset,
+  //       setData({
+  //         labels,
+  //         datasets: [
+  //           {
+  //             ...defaultDataset,
               
-              label: selected.name,
-              data: marketData.data.prices.map((price: number[]) => {
-                return price[1];
-              })
-            }
-          ],
-        });
+  //             label: selected.name,
+  //             data: marketData.data.prices.map((price: number[]) => {
+  //               return price[1];
+  //             })
+  //           }
+  //         ],
+  //       });
 
-        const options = {
-          ...defaultOptions
-        };
+  //       const options = {
+  //         ...defaultOptions
+  //       };
 
-        if (options.plugins?.title){
-          options.plugins.title.text = `${selected.name} Price over last ${chartIntervalSelected} day${chartIntervalSelected > 1 ? "s" : ""}`;
-        }
+  //       if (options.plugins?.title){
+  //         options.plugins.title.text = `${selected.name} Price over last ${chartIntervalSelected} day${chartIntervalSelected > 1 ? "s" : ""}`;
+  //       }
 
-        setOptions(options);
+  //       setOptions(options);
 
-      } catch(e) {
-        console.log(e);
-      }
-    }
+  //     } catch(e) {
+  //       console.log(e);
+  //     }
+  //   }
 
-    loadChartData();
-  }, [selected, chartIntervalSelected]);
+  //   loadChartData();
+  // }, [selected, chartIntervalSelected]);
 
+  
   const cryptoOptTemplate = (c: CryptoModel) => {
     return (
         <div className="dropdown-item">
@@ -164,18 +168,20 @@ export default function App() {
       <div >
         {
           cryptos ? 
-            <Dropdown 
+            <MultiSelect 
               className="chart-selector"
               options={cryptos}
               optionLabel="name"
-              optionValue="id"
-              checkmark={false}
+              // optionValue="id"
+              // checkmark={false}
               filter
               value={selected}
               itemTemplate={cryptoOptTemplate}
-              valueTemplate={selectedCryptoTemplate}
+              // valueTemplate={selectedCryptoTemplate}
               placeholder="Choose a crypto"
-              onChange={(e) => setSelected(e.value)}
+              onChange={(e) => {
+                setSelected(e.value);
+              }}
             />
           : null
         }
@@ -189,15 +195,22 @@ export default function App() {
         />
       </div>
 
-      {selected ? <CryptoSummary crypto={selected} /> : null}
+      {selected.map((s) => {
+        return (<CryptoSummary 
+                  key={s.id}
+                  crypto={s}
+                />);
+      })}
 
-      {
+      {/* {selected ? <CryptoSummary crypto={selected} /> : null} */}
+
+      {/* {
         data ? 
           <div style={{width: 600}}>
             <Line options={options} data={data} />
           </div>
           : null
-      }
+      } */}
       
     </div>
   );

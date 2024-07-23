@@ -4,6 +4,10 @@
 
 }
 
+.crypto-summary-input {
+  margin: 10px;
+}
+
 .chart-selector {
   margin-right: 10px;
   width: fit-content;
