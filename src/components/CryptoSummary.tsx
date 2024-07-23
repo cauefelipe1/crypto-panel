@@ -8,7 +8,7 @@ export type Props = {
 }
 
 export default function CryptoSummary({crypto, updateOwner} : Props) : JSX.Element {
-    const [amount, setAmount] = useState(1000);
+    const [amount, setAmount] = useState(0);
 
     useEffect(function initialOwnerUpdate() {
         updateOwner(crypto, amount);
@@ -26,11 +26,12 @@ export default function CryptoSummary({crypto, updateOwner} : Props) : JSX.Eleme
                 step={1}
                 onChange={(e) => {
                     const amt = e.value ?? 0
+
                     setAmount(amt);
                     updateOwner(crypto, amt);
                 }}
             />
-            <p>$ {(crypto.current_price * amount).toLocaleString(undefined, {minimumFractionDigits: 2 , maximumFractionDigits: 2})}</p>
+            <p>$ {(crypto.current_price * (amount ?? 0)).toLocaleString(undefined, {minimumFractionDigits: 2 , maximumFractionDigits: 2})}</p>
         </div>
     );
 }

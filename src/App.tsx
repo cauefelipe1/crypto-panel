@@ -17,28 +17,16 @@ import { MultiSelect } from 'primereact/multiselect';
 
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
   Tooltip,
   Legend,
   ChartData,
-  ChartOptions
+  ChartOptions,
+  ArcElement
 } from 'chart.js';
 
-import { Line } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 export default function App() {
@@ -51,7 +39,7 @@ export default function App() {
     backgroundColor: 'rgba(255, 99, 132, 0.5)'
   };
 
-  const defaultOptions: ChartOptions<"line"> = {
+  const defaultOptions: ChartOptions<"pie"> = {
     responsive: true,
     plugins: {
       legend: {
@@ -67,9 +55,9 @@ export default function App() {
   const [cryptos, setCryptos] = useState<CryptoModel[] | null>();
   const [selected, setSelected] = useState<CryptoModel[]>([]);
   const [chartIntervalSelected, setChartIntervalSelected] = useState(30);
-  const [data, setData] = useState<ChartData<"line">>();
+  const [data, setData] = useState<ChartData<"pie">>();
 
-  const [options, setOptions] = useState<ChartOptions<"line">>(defaultOptions);
+  const [options, setOptions] = useState<ChartOptions<"pie">>(defaultOptions);
   const [totalCryptAmout, setTotalCryptAmout] = useState(0);
 
   useEffect(function loadCoinsDropDown() {
@@ -85,6 +73,9 @@ export default function App() {
   }, []);
 
   useEffect(function calcTotamCryptoAmount() {
+    if (selected.length <= 0)
+      return;
+
     let temp = 0;
 
     for (const s of selected) {
@@ -92,60 +83,36 @@ export default function App() {
     }
 
     setTotalCryptAmout(temp);
+
+    setData({
+      labels: selected.map(s => s.name),
+      datasets: [
+        {
+          label: '# of Votes',
+          data: selected.map(s => s.owned),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    }
+    );
   }, [selected])
 
-  // useEffect(() => {
-  //   async function loadChartData(){
-  //     if (!selected)
-  //       return;
-
-  //     const interval = chartIntervalSelected > 1 ? "&interval=daily" : "";
-
-  //     const url = baseCoinGeckoUrl + `coins/${selected.id}/market_chart?vs_currency=usd&days=${chartIntervalSelected}${interval}`;
-
-  //     try{
-  //       const marketData = await axios.get(url)
-        
-  //       const labels = marketData.data.prices.map((price: number[]) => {
-  //         const date = moment.unix(price[0] / 1000);
-
-  //         if (chartIntervalSelected == 1)
-  //           return date.format('LT');
-          
-  //         return date.format('MM-DD-YYYY');
-  //       });
-
-  //       setData({
-  //         labels,
-  //         datasets: [
-  //           {
-  //             ...defaultDataset,
-              
-  //             label: selected.name,
-  //             data: marketData.data.prices.map((price: number[]) => {
-  //               return price[1];
-  //             })
-  //           }
-  //         ],
-  //       });
-
-  //       const options = {
-  //         ...defaultOptions
-  //       };
-
-  //       if (options.plugins?.title){
-  //         options.plugins.title.text = `${selected.name} Price over last ${chartIntervalSelected} day${chartIntervalSelected > 1 ? "s" : ""}`;
-  //       }
-
-  //       setOptions(options);
-
-  //     } catch(e) {
-  //       console.log(e);
-  //     }
-  //   }
-
-  //   loadChartData();
-  // }, [selected, chartIntervalSelected]);
 
   
   const cryptoOptTemplate = (c: CryptoModel) => {
@@ -157,19 +124,6 @@ export default function App() {
     );
   };
 
-  const selectedCryptoTemplate = (c: CryptoModel, props: any) => {
-    if (c) {
-        return (
-          <div className="dropdown-item">
-                <img alt={c.name} src={c.image} style={{ width: '18px' }} className="icon"/>
-                <div>{c.name}</div>
-            </div>
-        );
-    }
-
-    return <span>{props.placeholder}</span>;
-  };
-
   function updateOwner(crypto: CryptoModel, amount: number): void {
     let temp = [...selected];
     let found = temp.find(c => c.id === crypto.id);
@@ -177,7 +131,7 @@ export default function App() {
     if (!found)
       return;
 
-    found.owned = amount
+    found.owned = amount ?? 0;
     setSelected(temp);
   }
 
@@ -223,15 +177,13 @@ export default function App() {
                 />);
       })}
 
-      {/* {selected ? <CryptoSummary crypto={selected} /> : null} */}
-
-      {/* {
+      {
         data ? 
-          <div style={{width: 600}}>
-            <Line options={options} data={data} />
+          <div style={{width: 400}}>
+            <Pie data={data} />
           </div>
           : null
-      } */}
+      }
 
       <p>Your portifolio worth is: ${totalCryptAmout.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
 
