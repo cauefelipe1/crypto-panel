@@ -89,8 +89,6 @@ export default function App() {
 
     for (const s of selected) {
       temp+= (s.owned ?? 0) * s.current_price;
-
-      console.log("calculating: ", s.owned, s.current_price, temp);
     }
 
     setTotalCryptAmout(temp);
