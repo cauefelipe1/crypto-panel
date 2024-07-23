@@ -136,69 +136,60 @@ export default function App() {
     loadChartData();
   }, [selected, chartIntervalSelected]);
 
+  const cryptoOptTemplate = (c: CryptoModel) => {
+    return (
+        <div className="dropdown-item">
+            <img alt={c.name} src={c.image}  style={{ width: '18px' }} className="icon" />
+            <div>{c.name}</div>
+        </div>
+    );
+  };
+
+  const selectedCryptoTemplate = (c: CryptoModel, props: any) => {
+    if (c) {
+        return (
+          <div className="dropdown-item">
+                <img alt={c.name} src={c.image} style={{ width: '18px' }} className="icon"/>
+                <div>{c.name}</div>
+            </div>
+        );
+    }
+
+    return <span>{props.placeholder}</span>;
+  };
+
   return (
     <div className="App">
       
       <div >
+        {
+          cryptos ? 
+            <Dropdown 
+              className="chart-selector"
+              options={cryptos}
+              optionLabel="name"
+              optionValue="id"
+              checkmark={false}
+              filter
+              value={selected}
+              itemTemplate={cryptoOptTemplate}
+              valueTemplate={selectedCryptoTemplate}
+              placeholder="Choose a crypto"
+              onChange={(e) => setSelected(e.value)}
+            />
+          : null
+        }
 
-        <select
+        <Dropdown 
           className="chart-selector"
-          defaultValue="default"
-          onChange={async (e) => {
-            if (e.target.value === "default") {
-              return;
-            }
-
-            const crypto = cryptos?.find((c) => c.id === e.target.value);
-
-            setSelected(crypto);
-            
-          }}
-        >
-          <option value="default"> Choose an option </option>
-          {
-            cryptos
-              ? cryptos.map((crypto) => {
-              
-                  return (
-                    <option
-                      key={crypto.id}
-                      value={crypto.id}
-                    >
-                      {crypto.name}
-                    </option>) 
-                })
-            : null
-          }
-        </select>
-
-        <select
-          className="chart-selector"
-          onChange={(e) => {
-            setChartIntervalSelected(parseInt(e.target.value));
-          }}
-        >
-          <option value={30}>30 days</option>
-          <option value={7}>7 days</option>
-          <option value={1}>1 day</option>
-        </select>
+          options={[30, 7, 1]}
+          value={chartIntervalSelected}
+          defaultValue={30}
+          onChange={(e) => setChartIntervalSelected(e.value)}
+        />
       </div>
 
       {selected ? <CryptoSummary crypto={selected} /> : null}
-
-      {
-        cryptos ? 
-          <Dropdown 
-            options={cryptos}
-            optionLabel="name"
-            optionValue="id"
-            checkmark={true}
-            editable
-            value={selected} onChange={(e) => setSelected(e.value)}
-          />
-        : null
-      }
-      
 
       {
         data ? 
