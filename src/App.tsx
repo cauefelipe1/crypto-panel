@@ -8,16 +8,22 @@ import CryptoPanelPage from './pages/CryptoPanelPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterUserPage from './pages/RegisterUserPage';
+import Dashboard from './pages/Dashboard';
 
 export default function App() {
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<LoginPage />} />
+        <Route path="/" element={<Dashboard />}>
+          
+          <Route path='panel' element={<CryptoPanelPage />} />
+
+        </Route>
+
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register-user' element={<RegisterUserPage />} />
-        <Route path='/panel' element={<CryptoPanelPage />} />
+        
         {/* <div className="App">
           <CryptoPanelPage />
         </div> */}
