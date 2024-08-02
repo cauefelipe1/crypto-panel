@@ -8,14 +8,15 @@ import CryptoPanelPage from './pages/CryptoPanelPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterUserPage from './pages/RegisterUserPage';
-import Dashboard from './pages/Dashboard';
+//import Dashboard from './pages/Dashboard';
+import LoggedLandpage from './pages/loggedLandpage/LoggedLandpage';
 
 export default function App() {
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />}>
+        <Route path="/" element={<LoggedLandpage />}>
           
           <Route path='panel' element={<CryptoPanelPage />} />
 

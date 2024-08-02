@@ -1,0 +1,88 @@
+.main-app-container {
+    display: flex;
+    flex-direction: row;
+
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+
+    padding: 20px;
+
+    background-color: #FFF;
+}
+
+.app-section {
+    
+    &.side-menu {
+        width: 200px;
+        background-color: #FFF;
+    }
+
+    &.content {
+        flex: 1;
+        padding: 10px;
+        border: 2px solid #f6f5fa;
+        border-radius: 20px;
+        background-color: #FFF;
+        overflow: auto;
+    }
+
+    &.highlights {
+        width: 300px;
+        background-color: #FFF;
+    }
+}
+
+.watchlist-container {
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 10px;
+
+        .header-title {
+            span {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    
+    .watchlist-content {
+        display: flex;
+        flex-direction: row;
+        // overflow-x: auto;
+        // overflow-y: hidden;
+        overflow: auto;
+
+        .watchlist-card {
+            display: flex;
+            flex-direction: row;
+            flex-shrink: 0;
+            background-color: #3478f6;
+            color: #FFF;
+            margin: 10px;
+            width: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            
+            .icon {
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+                background-color: #5093f7;
+                border-radius: 0 40px 40px 0px;
+            }
+
+            .card-content{
+                display: flex;
+                flex: 1;
+                justify-content: space-between;
+                flex-direction: column;
+                margin: 10px;
+            }
+        }
+    }
+}
