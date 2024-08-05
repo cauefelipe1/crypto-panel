@@ -8,7 +8,7 @@
 
     padding: 20px;
 
-    background-color: #FFF;
+    background-color: #fdfeff;
 }
 
 .app-section {
@@ -16,7 +16,7 @@
     &.side-menu {
         width: 200px;
         padding: 0 0 0 10px;
-        background-color: #FFF;
+        
     }
 
     &.content {
@@ -24,12 +24,10 @@
         padding: 20px;
         border: 2px solid #f6f5fa;
         border-radius: 20px;
-        background-color: #FFF;
         overflow: auto;
     }
 
     &.highlights {
         width: 300px;
-        background-color: #FFF;
     }
 }
