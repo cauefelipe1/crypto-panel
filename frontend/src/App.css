@@ -1,5 +1,8 @@
-.header {
+body {
   color: #353535;
+}
+
+.header {
   letter-spacing: -1.5px;
 }
 

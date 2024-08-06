@@ -1,112 +1,153 @@
 .watchlist-container {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-
-    .watchlist-header {
+    .watchlist-cards-container {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        //margin: 0 10px;
-        color: #707384;
+        flex-direction: column;
+        margin: 0 0 20px 0;
+        cursor: pointer;
 
-        .header-title {
+        .watchlist-header {
             display: flex;
-            align-items: center;
-            font-weight: bolder;
+            flex-direction: row;
+            justify-content: space-between;
+            //margin: 0 10px;
+            color: #707384;
 
-            span {
-                margin-right: 10px;
-            }
-
-            .add-icon {
+            .header-title {
                 display: flex;
                 align-items: center;
-                border-radius: 25px;
+                font-weight: bolder;
+
+                span {
+                    margin-right: 10px;
+                }
+
+                .add-icon {
+                    display: flex;
+                    align-items: center;
+                    border-radius: 25px;
+                }
+            }
+
+            .arrow-buton {
+                color: #383e49;
             }
         }
 
-        .arrow-buton {
-            color: #383e49;
+        
+        .watchlist-content {
+            display: flex;
+            flex-direction: row;
+            overflow: auto;
+
+            .watchlist-card {
+                display: flex;
+                flex-direction: row;
+                flex-shrink: 0;
+
+                margin: 10px 10px 10px 0px;
+                width: 170px;
+                border-radius: 8px;
+                overflow: hidden;
+
+                background-color: #3478f6;
+                color: #FFF;
+                
+                .card-icon {
+                    display: flex;
+                    align-items: center;
+                    padding: 0px 10px 0px 10px;
+                    background-color: #5093f7;
+                    border-radius: 0 40px 40px 0px;
+                }
+
+                .card-content {
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1;
+                    margin: 15px 10px 15px 10px;
+                    
+                    font-weight: bold;
+                    font-size: 12px;
+                    
+
+                    .card-header {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        
+                        margin: 0 0 5px 0;
+
+                        .coin-name {
+                            margin: 0 3px 0 0;
+                        }
+
+                        .coin-code {
+                            padding: 3px 2px 2px 2px;
+                            font-size: 8px;
+                            background-color: #2b66d2;
+                            border-radius: 10%;
+                        }
+                    }
+
+                    .card-value {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                        .coin-value {
+                            margin: 0 3px 0 0;
+                        }
+
+                        .coin-growth {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            align-items: center;
+
+                            font-size: 9px;
+
+                            span {
+                                margin: 0 0 0 3px;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    
-    .watchlist-content {
-        display: flex;
-        flex-direction: row;
-        overflow: auto;
-
-        .watchlist-card {
+    .watchlist-chart-container {
+        .chart-header {
             display: flex;
             flex-direction: row;
-            flex-shrink: 0;
 
-            margin: 10px 10px 10px 0px;
-            width: 170px;
-            border-radius: 8px;
-            overflow: hidden;
-
-            background-color: #3478f6;
-            color: #FFF;
-            
-            .card-icon {
-                display: flex;
-                align-items: center;
-                padding: 0px 10px 0px 10px;
-                background-color: #5093f7;
-                border-radius: 0 40px 40px 0px;
+            .coin-selector {
+                //BEGIN: Prime React Override
+                .p-dropdown {
+                    width: 170px;
+                }
+                //END: Prime React Override
             }
 
-            .card-content {
+            .coin-summary {
                 display: flex;
                 flex-direction: column;
-                flex: 1;
-                margin: 15px 10px 15px 10px;
-                
-                font-weight: bold;
-                font-size: 12px;
-                
+                justify-content: center;
 
-                .card-header {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    
-                    margin: 0 0 5px 0;
+                margin: 0 0 0 30px;
 
-                    .coin-name {
-                        margin: 0 3px 0 0;
+                font-weight: 800;
+
+                .coin-growth {
+                    font-size: small;
+                    color: #3478f6;
+
+                    .amount {
+                        margin: 0 5px 0 0;
                     }
 
-                    .coin-code {
-                        padding: 3px 2px 2px 2px;
-                        font-size: 8px;
-                        background-color: #2b66d2;
-                        border-radius: 10%;
-                    }
-                }
-
-                .card-value {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-
-                    .coin-value {
-                        margin: 0 3px 0 0;
-                    }
-
-                    .coin-growth {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: space-between;
-                        align-items: center;
-
-                        font-size: 9px;
-
-                        span {
-                            margin: 0 0 0 3px;
-                        }
+                    .percentage {
+                        margin: 0 0 0 5px;
                     }
                 }
             }
