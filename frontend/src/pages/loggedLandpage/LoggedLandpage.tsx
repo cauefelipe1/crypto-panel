@@ -1,7 +1,10 @@
+import './LoggedLandpage.scss';
+
 import { Outlet } from 'react-router-dom';
 //import Dashboard from '../../components/Dashboard/Dashboard';
 import MainSideMenu from '../../components/MainSideMenu/MainSideMenu';
-import './LoggedLandpage.scss';
+import Highlights from '../../components/Highlights/Highlights';
+
 
 export default function LoggedLandpage() {
 
@@ -16,7 +19,9 @@ export default function LoggedLandpage() {
                 <Outlet/>
             </div>
 
-            <div className='app-section highlights'> Something</div>
+            <div className='app-section highlights'> 
+                <Highlights />
+            </div>
 
         </div>
     );

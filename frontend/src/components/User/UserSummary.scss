@@ -1,0 +1,26 @@
+.user-summary-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .user-data{
+        display: flex;
+        flex-direction: row;
+
+        .user-avatar{
+            margin: 0 15px 0 0;
+        }
+
+        .user-name {
+            font-weight: 900;
+            p {
+                word-spacing: 100vw;
+            }
+        }
+
+        .user-email {
+            font-size:small;
+        }
+        
+    }
+}
