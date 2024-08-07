@@ -158,6 +158,33 @@
                     }
                 }
             }
+
+            .chart-controls {
+                //BEGIN: Prime React Override
+                .p-selectbutton .pbutton, .p-button {
+                    padding: 5px 10px 5px 10px;
+                    margin: 0 2px 0 2px;
+                    
+                    border: none;
+                    font-size: smaller;
+                    font-weight: bolder;
+                    color: #b0b4bf;
+
+                    &.p-focus, &.p-highlight {
+                        background-color: #f4f5f7;
+                        border: none;
+                        box-shadow: none;
+                        color: inherit;
+                    }
+
+                    // &:focus{
+                    //     background-color: red;
+                    //     border: none;
+                    //     box-shadow: none;
+                    // }
+                }
+                //END: Prime React Override
+            }
             
         }
     }

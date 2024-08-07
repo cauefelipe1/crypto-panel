@@ -11,6 +11,7 @@ import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
 
+
 Chartjs.register(annotationPlugin);
 
 interface CryptoSummary {
@@ -192,9 +193,12 @@ export default function Watchlist() {
 
     const [chartPeriod, setChartPeriod] = useState(null);
     const chartPeriods = [
-        { label: 'A', value: 1 },
-        { label: 'B', value: 2 },
-        { label: 'C', value: 3 }
+        { label: '1D', value: 1 },
+        { label: '1W', value: 2 },
+        { label: '1M', value: 3 },
+        { label: '3M', value: 4 },
+        { label: '6M', value: 5 },
+        { label: '1Y', value: 6 }
     ];
 
     return (
@@ -304,7 +308,7 @@ export default function Watchlist() {
                                         </span>
                                     </div>
                                 </>) :
-                                <div className="select-coin">Select a coin</div>
+                                <div className="select-coin">Select a crypto</div>
                             }
                             
                         </div>
@@ -312,8 +316,10 @@ export default function Watchlist() {
                     
                     <div className="chart-controls">
                         <SelectButton 
+                            className="select-button"
                             value={chartPeriod}
                             options={chartPeriods}
+                            onChange={(e) => setChartPeriod(e.value)}
                         />
                     </div>
                 </div>
