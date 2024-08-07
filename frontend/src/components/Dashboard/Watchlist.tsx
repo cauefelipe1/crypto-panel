@@ -9,6 +9,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Image } from 'primereact/image';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { SelectButton } from "primereact/selectbutton";
 
 Chartjs.register(annotationPlugin);
 
@@ -189,6 +190,13 @@ export default function Watchlist() {
         setChartOptions(options);
     }, []);
 
+    const [chartPeriod, setChartPeriod] = useState(null);
+    const chartPeriods = [
+        { label: 'A', value: 1 },
+        { label: 'B', value: 2 },
+        { label: 'C', value: 3 }
+    ];
+
     return (
         <div className="watchlist-container">
             <div className='watchlist-cards-container'>
@@ -254,50 +262,59 @@ export default function Watchlist() {
             <div className="watchlist-chart-container">
                 
                 <div className="chart-header">
-                    <div className="coin-selector">
-                        <Dropdown
-                            value={selectedCrypto}
-                            width={300}
-                            onChange={(e: DropdownChangeEvent) => {
-                                console.log(e);
-                                setSelectedCrypto(e.value);
-                            }}
-                            options={cryptoSummaries}
-                            optionLabel="code"
-                            placeholder="Select a Crypto"
-                            filter
-                            // dropdownIcon={(options) => {
-                            //     {/* @ts-ignore */}
-                            //     return <FontAwesomeIcon icon="fa-solid fa-sort-down" {...options.iconProps} /> 
-                            // }} 
-                        />
+                    <div className="left-side">
+                        <div className="coin-selector">
+                            <Dropdown
+                                value={selectedCrypto}
+                                width={300}
+                                onChange={(e: DropdownChangeEvent) => {
+                                    console.log(e);
+                                    setSelectedCrypto(e.value);
+                                }}
+                                options={cryptoSummaries}
+                                optionLabel="code"
+                                placeholder="Select a Crypto"
+                                filter
+                                // dropdownIcon={(options) => {
+                                //     {/* @ts-ignore */}
+                                //     return <FontAwesomeIcon icon="fa-solid fa-sort-down" {...options.iconProps} /> 
+                                // }} 
+                            />
+                        </div>
+
+                        <div className="coin-summary">
+                            {
+                                selectedCrypto ? 
+                                (<>
+                                    <div className="coin-value">
+                                        {selectedCrypto.coinValue.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+                                    </div>
+
+                                    <div className="coin-growth">
+                                        
+                                        <span className="amount">
+                                            {selectedCrypto.amountGrowth.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
+                                        </span> 
+                                        
+                                        {/* @ts-ignore */}
+                                        <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
+
+                                        <span className="percentage">
+                                            {selectedCrypto.percentageGrowth}%
+                                        </span>
+                                    </div>
+                                </>) :
+                                <div className="select-coin">Select a coin</div>
+                            }
+                            
+                        </div>
                     </div>
-
-                    <div className="coin-summary">
-                        {
-                            selectedCrypto ? 
-                            (<>
-                                <div className="coin-value">
-                                    {selectedCrypto.coinValue.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
-                                </div>
-
-                                <div className="coin-growth">
-                                    
-                                    <span className="amount">
-                                        {selectedCrypto.amountGrowth.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
-                                    </span> 
-                                    
-                                    {/* @ts-ignore */}
-                                    <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
-
-                                    <span className="percentage">
-                                        {selectedCrypto.percentageGrowth}%
-                                    </span>
-                                </div>
-                            </>) :
-                            <div className="select-coin">Select a coin</div>
-                        }
-                        
+                    
+                    <div className="chart-controls">
+                        <SelectButton 
+                            value={chartPeriod}
+                            options={chartPeriods}
+                        />
                     </div>
                 </div>
 

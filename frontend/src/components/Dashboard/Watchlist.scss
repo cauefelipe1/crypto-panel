@@ -121,36 +121,44 @@
             display: flex;
             flex-direction: row;
 
-            .coin-selector {
-                //BEGIN: Prime React Override
-                .p-dropdown {
-                    width: 170px;
-                }
-                //END: Prime React Override
-            }
+            justify-content: space-between;
 
-            .coin-summary {
+            .left-side {
                 display: flex;
-                flex-direction: column;
-                justify-content: center;
+                flex-direction: row;
 
-                margin: 0 0 0 30px;
-
-                font-weight: 800;
-
-                .coin-growth {
-                    font-size: small;
-                    color: #3478f6;
-
-                    .amount {
-                        margin: 0 5px 0 0;
+                .coin-selector {
+                    //BEGIN: Prime React Override
+                    .p-dropdown {
+                        width: 170px;
                     }
-
-                    .percentage {
-                        margin: 0 0 0 5px;
+                    //END: Prime React Override
+                }
+    
+                .coin-summary {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+    
+                    margin: 0 0 0 30px;
+    
+                    font-weight: 800;
+    
+                    .coin-growth {
+                        font-size: small;
+                        color: #3478f6;
+    
+                        .amount {
+                            margin: 0 5px 0 0;
+                        }
+    
+                        .percentage {
+                            margin: 0 0 0 5px;
+                        }
                     }
                 }
             }
+            
         }
     }
 }
