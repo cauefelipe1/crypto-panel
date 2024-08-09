@@ -1,4 +1,7 @@
 .quick-exchange-container {
+    display: flex;
+    flex-direction: column;
+
     padding: 10px;
     border: 2px solid #f6f5fa;
     border-radius: 20px;
@@ -8,5 +11,10 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+    }
+
+    .quick-exchange-conversion {
+        display: flex;
+        flex-direction: column;
     }
 }

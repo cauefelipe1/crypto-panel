@@ -1,0 +1,28 @@
+.quick-crypto-amount-selector-container {
+    display: flex;
+    flex-direction: column;
+
+
+    .coin-reference {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        font-size: x-small;
+        color: #a8a8a8;
+
+        .coin-correlation-reference {
+            font-weight: 900;
+        }
+
+        .from-to-reference {
+            font-weight: bold;
+        }
+
+    }
+
+    .slider{
+        display: flex;
+        justify-content: center;
+    }
+}

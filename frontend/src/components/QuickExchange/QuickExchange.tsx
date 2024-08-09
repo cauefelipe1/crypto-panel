@@ -2,15 +2,12 @@ import { useState } from "react";
 import "./QuickExchange.scss";
 
 import { SelectButton, SelectButtonChangeEvent } from "primereact/selectbutton";
-import { Dropdown } from "primereact/dropdown";
-import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
-import { Nullable } from "primereact/ts-helpers";
+import CryptoConversionInput from "../CryptoConversionInput/CryptoConversionInput";
+import QuickCryptoAmountSelector from "../QuickCryptoAmountSelector/QuickCryptoAmountSelector";
 
 export default function QuickExchange() {
     const tradeOptions: string[] = ['Buy', 'Sell'];
     const [selectedTradeOption, setSelectedTradeOption] = useState<string>(tradeOptions[0]);
-
-    const [fromAmount, setFromAmount] = useState<Nullable<number>>(0.0);
 
     return (
         <div className="quick-exchange-container">
@@ -29,18 +26,18 @@ export default function QuickExchange() {
                         From <span className="crypto-name">Ethereum</span>
                     </div>
                     
-                    {/* <div className="p-inputgroup" style={{width: "100%"}}> */}
-                        <Dropdown />
-                        <InputNumber value={fromAmount} onValueChange={(e: InputNumberValueChangeEvent) => setFromAmount(e.value)}/>
-                        
-                    {/* </div> */}
-                    
+                    <CryptoConversionInput />                    
                 </div>
 
                 <div className="to">
-                    To <span className="crypto-name">Tether</span>
+                    <div>
+                        To <span className="crypto-name">Tether</span>
+                    </div>
+
+                    <CryptoConversionInput />
                 </div>
 
+                <QuickCryptoAmountSelector />
             </div>
             
         </div>
