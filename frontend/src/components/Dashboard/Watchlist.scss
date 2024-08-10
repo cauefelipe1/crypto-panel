@@ -49,15 +49,25 @@
                 border-radius: 8px;
                 overflow: hidden;
 
-                background-color: #3478f6;
+                //background-color: #3478f6;
+                background-color: #f2f8fe;
                 color: #FFF;
+
+                &.negative {
+                    background-color: #fdf5f4;
+                }
                 
                 .card-icon {
                     display: flex;
                     align-items: center;
                     padding: 0px 10px 0px 10px;
-                    background-color: #5093f7;
+                    //background-color: #5093f7;
+                    background-color: #eaf3fe;
                     border-radius: 0 40px 40px 0px;
+
+                    &.negative {
+                        background-color: #f9e9e9;
+                    }
                 }
 
                 .card-content {
@@ -86,6 +96,11 @@
                             font-size: 8px;
                             background-color: #2b66d2;
                             border-radius: 10%;
+
+                            &.negative {
+                                color: #eb605b;
+                                background-color: #fae7e7;
+                            }
                         }
                     }
 
@@ -108,6 +123,10 @@
 
                             span {
                                 margin: 0 0 0 3px;
+                            }
+
+                            &.negative {
+                                color: #eb605b;
                             }
                         }
                     }

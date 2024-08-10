@@ -38,7 +38,7 @@ export default function Watchlist() {
         {
             name: "Bitcoin",
             code: "BTC/USDT",
-            coinValue: 1234.9,
+            coinValue: -1234.9,
             percentageGrowth: 1.3,
             amountGrowth: 0,
             icon: "B"
@@ -54,7 +54,7 @@ export default function Watchlist() {
         {
             name: "Bitcoin",
             code: "BTC/USDT",
-            coinValue: 1234.9,
+            coinValue: -1234.9,
             percentageGrowth: 1.3,
             amountGrowth: 0,
             icon: "B"
@@ -229,27 +229,39 @@ export default function Watchlist() {
                                 // Move to a new component
                                 <div
                                     key={ uuidv4() } 
-                                    className='watchlist-card'
+                                    className={"watchlist-card " + (c.coinValue < 0 ? "negative" : "")}
                                     onClick={(e) => {
                                         console.log(e.target);
                                     }}
                                 >
-                                    <div className='card-icon'>
+                                    <div 
+                                        className={"card-icon " + (c.coinValue < 0 ? "negative" : "")}
+                                    >
                                         <Image src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" alt="Image" width='40'/>
                                     </div>
 
                                     <div className='card-content'>
                                         <div className="card-header">
                                             <span className="coin-name">{c.name}</span>
-                                            <span className="coin-code">{c.code}</span>
+                                            <span className={"coin-code " + (c.coinValue < 0 ? "negative" : "")}>{c.code}</span>
                                         </div>
 
                                         <div className="card-value">
                                             <span className="coin-value">{c.coinValue}</span>
                                             
-                                            <div className="coin-growth">
-                                                {/* @ts-ignore */}
-                                                <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
+                                            <div
+                                                className={"coin-growth " + (c.coinValue < 0 ? "negative" : "")}
+                                            >
+                                                {
+                                                    c.coinValue < 0 ?
+                                                    
+                                                    /* @ts-ignore */
+                                                    <FontAwesomeIcon icon="fa-solid fa-arrow-trend-down" /> :
+
+                                                    /* @ts-ignore */
+                                                    <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
+                                                }
+                                                
 
                                                 <span>{c.percentageGrowth}%</span>
                                             </div>
