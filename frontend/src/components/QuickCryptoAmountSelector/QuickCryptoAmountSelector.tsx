@@ -1,7 +1,9 @@
+import { useState } from "react";
 import "./QuickCryptoAmountSelector.scss";
+import { Slider } from "primereact/slider";
 
 export default function QuickCryptoAmountSelector() {
-
+    const [value, setValue] = useState(0.0);
     return (
         <div className="quick-crypto-amount-selector-container">
             <div className="coin-reference">
@@ -14,9 +16,9 @@ export default function QuickCryptoAmountSelector() {
                 </div>
             </div>
 
-            {/* <div className="slider">
+            <div className="slider">
                 <Slider value={value} onChange={(e: any) => setValue(e.value)} step={25} />
-            </div> */}
+            </div>
             
         </div>
     );
