@@ -29,3 +29,14 @@ export type CryptoModel = {
 
     owned: number;
   }
+
+  export interface CryptoSummary {
+    id: number;
+    name: string;
+    code: string;
+    coinValue: number;
+    percentageGrowth: number;
+    amountGrowth: number;
+    icon: string;
+    iconUrl?: string; 
+}

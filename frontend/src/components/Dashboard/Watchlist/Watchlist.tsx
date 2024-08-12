@@ -6,24 +6,14 @@ import { getCryptoSummariesDummyData } from "./Watchlist.helpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Chart as Chartjs} from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { Image } from 'primereact/image';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
+import { CryptoSummary } from "../../../models/Crypto";
+import WatchListCard from "./WatchListCard";
 
 
 Chartjs.register(annotationPlugin);
-
-interface CryptoSummary {
-    id: number;
-    name: string;
-    code: string;
-    coinValue: number;
-    percentageGrowth: number;
-    amountGrowth: number;
-    icon: string;
-    iconUrl?: string; 
-}
 
 export default function Watchlist() {
     const [selectedCrypto, setSelectedCrypto] = useState<CryptoSummary | null>(null);
@@ -151,68 +141,14 @@ export default function Watchlist() {
                 </div>
 
                 <div className='watchlist-content'>
-
                     {
                         cryptoSummaries.map((c) => {
                             return (
-                                // Move to a new component
-                                <div
-                                    key={ c.id } 
-                                    className={
-                                        "watchlist-card " + 
-                                        (c.coinValue < 0 ? "negative" : "positive") +
-                                        (c.id === selectedCrypto?.id ? " selected" : "")
-                                    }
-                                    onClick={(e) => {
-                                        setSelectedCrypto(c);
-                                    }}
-                                >
-                                    <div 
-                                        className={"card-icon " + 
-                                            (c.coinValue < 0 ? "negative" : "positive") +
-                                            (c.id === selectedCrypto?.id ? " selected" : "")
-                                        }
-                                    >
-                                        <Image src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" alt="Image" width='40'/>
-                                    </div>
-
-                                    <div className='card-content'>
-                                        <div className="card-header">
-                                            <span className="coin-name">{c.name}</span>
-                                            <span 
-                                                className={"coin-code " + 
-                                                    (c.coinValue < 0 ? "negative" : "positive") +
-                                                    (c.id === selectedCrypto?.id ? " selected" : "")
-                                                }
-                                            >
-                                                    {c.code}
-                                            </span>
-                                        </div>
-
-                                        <div className="card-value">
-                                            <span className="coin-value">{c.coinValue}</span>
-                                            
-                                            <div
-                                                className={"coin-growth " + 
-                                                    (c.coinValue < 0 ? "negative" : "positive") +
-                                                    (c.id === selectedCrypto?.id ? " selected" : "")
-                                                }
-                                            >
-                                                {
-                                                    c.coinValue < 0 ?
-                                                    
-                                                    /* @ts-ignore */
-                                                    <FontAwesomeIcon icon="fa-solid fa-arrow-trend-down" /> :
-
-                                                    /* @ts-ignore */
-                                                    <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
-                                                }
-
-                                                <span>{c.percentageGrowth}%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <WatchListCard 
+                                    key={ c.id }
+                                    crypto={c}
+                                    isSelected={c.id === selectedCrypto?.id}
+                                    onClick={(c) => setSelectedCrypto(c)}/>
                             );
                         })
                     }
