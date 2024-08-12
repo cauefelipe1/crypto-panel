@@ -48,25 +48,48 @@
                 width: 170px;
                 border-radius: 8px;
                 overflow: hidden;
+                
+                &.positive {
+                    background-color: #f2f8fe;
+                }
 
-                //background-color: #3478f6;
-                background-color: #f2f8fe;
-                color: #FFF;
+                &.selected {
+                    color: #FFF;
+                }
+
+                &.positive.selected {
+                    background-color: #3478f6;
+                    box-shadow: 0 4px 8px 0 #f2f8fe, 0 3px 10px 0 #f2f8fe;
+                }
 
                 &.negative {
                     background-color: #fdf5f4;
+                }
+
+                &.negative.selected {
+                    background-color: #e93e31;
                 }
                 
                 .card-icon {
                     display: flex;
                     align-items: center;
                     padding: 0px 10px 0px 10px;
-                    //background-color: #5093f7;
-                    background-color: #eaf3fe;
                     border-radius: 0 40px 40px 0px;
 
+                    &.positive {
+                        background-color: #e9f1fc;
+                    }
+    
+                    &.positive.selected {
+                        background-color: #5093f7;
+                    }
+    
                     &.negative {
                         background-color: #f9e9e9;
+                    }
+    
+                    &.negative.selected {
+                        background-color: #f25543;
                     }
                 }
 
@@ -94,12 +117,31 @@
                         .coin-code {
                             padding: 3px 2px 2px 2px;
                             font-size: 8px;
-                            background-color: #2b66d2;
+
                             border-radius: 10%;
 
+                            color: #2b66d2;
+
+                            &.positive {
+                                background-color: #e7f1fe;
+                            }
+
+                            &.selected {
+                                color: #FFF;
+                            }
+            
+                            &.positive.selected {
+                                background-color: #2b66d2;
+                            }
+            
                             &.negative {
                                 color: #eb605b;
-                                background-color: #fae7e7;
+                                background-color: #fbe7e7;
+                            }
+            
+                            &.negative.selected {
+                                color: #FFF;
+                                background-color: #d60014;
                             }
                         }
                     }
@@ -120,13 +162,22 @@
                             align-items: center;
 
                             font-size: 9px;
+                            color: #2b66d2;;
 
                             span {
                                 margin: 0 0 0 3px;
                             }
 
+                            &.selected {
+                                color: #FFF;
+                            }
+            
                             &.negative {
                                 color: #eb605b;
+                            }
+            
+                            &.negative.selected {
+                                color: #FFF;
                             }
                         }
                     }

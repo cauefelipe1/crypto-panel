@@ -1,8 +1,8 @@
 import "./Watchlist.scss";
 
 import { useState, useEffect } from "react";
+import { getCryptoSummariesDummyData } from "./Watchlist.helpers";
 
-import {v4 as uuidv4} from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Chart as Chartjs} from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -15,6 +15,7 @@ import { SelectButton } from "primereact/selectbutton";
 Chartjs.register(annotationPlugin);
 
 interface CryptoSummary {
+    id: number;
     name: string;
     code: string;
     coinValue: number;
@@ -26,80 +27,8 @@ interface CryptoSummary {
 
 export default function Watchlist() {
     const [selectedCrypto, setSelectedCrypto] = useState<CryptoSummary | null>(null);
-    const cryptoSummaries: CryptoSummary[] = [
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 120,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: -1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: -1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        },
-        {
-            name: "Bitcoin",
-            code: "BTC/USDT",
-            coinValue: 1234.9,
-            percentageGrowth: 1.3,
-            amountGrowth: 0,
-            icon: "B"
-        }
-    ];
+
+    const cryptoSummaries: CryptoSummary[] = getCryptoSummariesDummyData();
 
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
@@ -228,14 +157,21 @@ export default function Watchlist() {
                             return (
                                 // Move to a new component
                                 <div
-                                    key={ uuidv4() } 
-                                    className={"watchlist-card " + (c.coinValue < 0 ? "negative" : "")}
+                                    key={ c.id } 
+                                    className={
+                                        "watchlist-card " + 
+                                        (c.coinValue < 0 ? "negative" : "positive") +
+                                        (c.id === selectedCrypto?.id ? " selected" : "")
+                                    }
                                     onClick={(e) => {
-                                        console.log(e.target);
+                                        setSelectedCrypto(c);
                                     }}
                                 >
                                     <div 
-                                        className={"card-icon " + (c.coinValue < 0 ? "negative" : "")}
+                                        className={"card-icon " + 
+                                            (c.coinValue < 0 ? "negative" : "positive") +
+                                            (c.id === selectedCrypto?.id ? " selected" : "")
+                                        }
                                     >
                                         <Image src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" alt="Image" width='40'/>
                                     </div>
@@ -243,14 +179,24 @@ export default function Watchlist() {
                                     <div className='card-content'>
                                         <div className="card-header">
                                             <span className="coin-name">{c.name}</span>
-                                            <span className={"coin-code " + (c.coinValue < 0 ? "negative" : "")}>{c.code}</span>
+                                            <span 
+                                                className={"coin-code " + 
+                                                    (c.coinValue < 0 ? "negative" : "positive") +
+                                                    (c.id === selectedCrypto?.id ? " selected" : "")
+                                                }
+                                            >
+                                                    {c.code}
+                                            </span>
                                         </div>
 
                                         <div className="card-value">
                                             <span className="coin-value">{c.coinValue}</span>
                                             
                                             <div
-                                                className={"coin-growth " + (c.coinValue < 0 ? "negative" : "")}
+                                                className={"coin-growth " + 
+                                                    (c.coinValue < 0 ? "negative" : "positive") +
+                                                    (c.id === selectedCrypto?.id ? " selected" : "")
+                                                }
                                             >
                                                 {
                                                     c.coinValue < 0 ?
@@ -261,7 +207,6 @@ export default function Watchlist() {
                                                     /* @ts-ignore */
                                                     <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
                                                 }
-                                                
 
                                                 <span>{c.percentageGrowth}%</span>
                                             </div>
@@ -284,7 +229,6 @@ export default function Watchlist() {
                                 value={selectedCrypto}
                                 width={300}
                                 onChange={(e: DropdownChangeEvent) => {
-                                    console.log(e);
                                     setSelectedCrypto(e.value);
                                 }}
                                 options={cryptoSummaries}

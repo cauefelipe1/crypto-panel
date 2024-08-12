@@ -1,6 +1,6 @@
 import './Dashboard.scss';
 
-import Watchlist from './Watchlist';
+import Watchlist from './Watchlist/Watchlist';
 
 export default function Dashboard() {
 
