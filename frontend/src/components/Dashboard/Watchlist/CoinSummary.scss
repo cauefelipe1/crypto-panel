@@ -1,0 +1,29 @@
+.coin-summary-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin: 0 0 0 30px;
+
+    font-weight: 800;
+
+    .coin-growth {
+        font-size: small;
+
+        .amount {
+            margin: 0 5px 0 0;
+        }
+
+        .percentage {
+            margin: 0 0 0 5px;
+        }
+
+        &.positive {
+            color: #3478f6;
+        }
+
+        &.negative {
+            color: #d60014;
+        }
+    }
+}

@@ -11,6 +11,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
 import { CryptoSummary } from "../../../models/Crypto";
 import WatchListCard from "./WatchListCard";
+import ChartSummary from "./CoinSummary";
 
 
 Chartjs.register(annotationPlugin);
@@ -182,32 +183,13 @@ export default function Watchlist() {
                             />
                         </div>
 
-                        <div className="coin-summary">
-                            {
-                                selectedCrypto ? 
-                                (<>
-                                    <div className="coin-value">
-                                        {selectedCrypto.coinValue.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
-                                    </div>
+                        {
+                            selectedCrypto ? 
+                                <ChartSummary crypto={selectedCrypto} /> :
+                            <div className="select-coin">Select a crypto</div>
+                        }
 
-                                    <div className="coin-growth">
-                                        
-                                        <span className="amount">
-                                            {selectedCrypto.amountGrowth.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
-                                        </span> 
-                                        
-                                        {/* @ts-ignore */}
-                                        <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
-
-                                        <span className="percentage">
-                                            {selectedCrypto.percentageGrowth}%
-                                        </span>
-                                    </div>
-                                </>) :
-                                <div className="select-coin">Select a crypto</div>
-                            }
-                            
-                        </div>
+                        
                     </div>
                     
                     <div className="chart-controls">
