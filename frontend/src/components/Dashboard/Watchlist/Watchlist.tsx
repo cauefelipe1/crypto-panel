@@ -24,6 +24,16 @@ export default function Watchlist() {
     const [chartOptions, setChartOptions] = useState({});
 
     useEffect(() => {
+        const coinValue = selectedCrypto?.coinValue ?? 0;
+
+        function positiveColor() { 
+            return (coinValue < 0 ?  "#e93e31": "#3478f6")
+        };
+
+        function positiveColorWithAlpha() { 
+            return (coinValue < 0 ?  "#e93e312A": "#3478f62A")
+        };
+
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
@@ -33,12 +43,12 @@ export default function Watchlist() {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [
                 {
-                    label: 'First Dataset',
+                    label: selectedCrypto?.name,
                     data: [65, 59, 80, 81, 56, 55, 40],
                     fill: true,
-                    borderColor: 'rgba(52, 120, 246, 1)', //documentStyle.getPropertyValue('--red-500'),
+                    borderColor: positiveColor(),
                     tension: 1,
-                    backgroundColor: 'rgba(52, 120, 246, 0.2)'
+                    backgroundColor: positiveColorWithAlpha()
                 }
             ]
         };
@@ -46,29 +56,23 @@ export default function Watchlist() {
             maintainAspectRatio: false,
             aspectRatio: 1,
             plugins: {
-                
                 annotation: {
                     annotations: {
                         line1: {
                             type: 'line',
                             yMin: 60,
                             yMax: 60,
-                            //value: 60,
-                            borderColor: 'rgba(52, 120, 246, 1)',
+                            borderColor: positiveColor(),
                             borderWidth: 1,
                             borderDash: [2, 2],
                             drawTime: "afterDraw",
                             init: true,
-                            
-                            
                             label: {
                                 display: true,
-                                content: "Test",
+                                content: selectedCrypto?.coinValue,
                                 position: "start",
-                                backgroundColor: 'rgba(52, 120, 246, 1)',
+                                backgroundColor: positiveColor()
                             }
-                            
-                            //borderDashOffset: 5
                         }
                     }
                 },
@@ -108,7 +112,7 @@ export default function Watchlist() {
 
         setChartData(data);
         setChartOptions(options);
-    }, []);
+    }, [selectedCrypto]);
 
     const [chartPeriod, setChartPeriod] = useState(null);
     const chartPeriods = [
@@ -217,7 +221,14 @@ export default function Watchlist() {
                 </div>
 
                 <div className="crypto-chart">
-                    <Chart type="line" data={chartData} options={chartOptions} />
+                    {
+                        selectedCrypto ?
+                        <Chart type="line" data={chartData} options={chartOptions} /> :
+                        <div>
+                            Select a cryto
+                        </div>
+                    }
+                    
                 </div>
             </div>
         </div>
