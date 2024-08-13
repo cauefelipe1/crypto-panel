@@ -53,12 +53,20 @@
                 flex-direction: row;
 
                 .coin-selector {
+                    margin: 0 30px 0 0;
+
                     //BEGIN: Prime React Override
                     .p-dropdown {
                         width: 170px;
                     }
                     //END: Prime React Override
                 }
+            }
+
+            .select-coin {
+                display: flex;
+                align-items: center;
+                font-weight: 900;
             }
 
             .chart-controls {
