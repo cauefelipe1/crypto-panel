@@ -12,12 +12,20 @@ export type WatchListCardProps = {
 
 export default function WatchListCard({crypto, isSelected, onClick} :WatchListCardProps) {
 
+    function isNegative(){
+        return crypto.percentageGrowth < 0;
+    }
+
+    function getSignCssClass(){
+        return (isNegative() ? "negative" : "positive");
+    }
+
     return (
         <div
             key={ crypto.id } 
             className={
                 "watchlist-card " + 
-                (crypto.coinValue < 0 ? "negative" : "positive") +
+                getSignCssClass() +
                 (isSelected ? " selected" : "")
             }
             onClick={() => {
@@ -26,11 +34,12 @@ export default function WatchListCard({crypto, isSelected, onClick} :WatchListCa
             >
             <div 
                 className={"card-icon " + 
-                    (crypto.coinValue < 0 ? "negative" : "positive") +
+                    getSignCssClass() +
                     (isSelected ? " selected" : "")
                 }
             >
-                <Image src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" alt="Image" width='40'/>
+                {/* <Image src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" alt="Image" width='40'/> */}
+                <Image src={crypto.iconUrl} alt="Image"/>
             </div>
 
             <div className='card-content'>
@@ -38,7 +47,7 @@ export default function WatchListCard({crypto, isSelected, onClick} :WatchListCa
                     <span className="coin-name">{crypto.name}</span>
                     <span 
                         className={"coin-code " + 
-                            (crypto.coinValue < 0 ? "negative" : "positive") +
+                            getSignCssClass() +
                             (isSelected ? " selected" : "")
                         }
                     >
@@ -51,12 +60,12 @@ export default function WatchListCard({crypto, isSelected, onClick} :WatchListCa
                     
                     <div
                         className={"coin-growth " + 
-                            (crypto.coinValue < 0 ? "negative" : "positive") +
+                            getSignCssClass() +
                             (isSelected ? " selected" : "")
                         }
                     >
                         {
-                            crypto.coinValue < 0 ?
+                            isNegative() ?
                             
                             /* @ts-ignore */
                             <FontAwesomeIcon icon="fa-solid fa-arrow-trend-down" /> :
@@ -65,7 +74,7 @@ export default function WatchListCard({crypto, isSelected, onClick} :WatchListCa
                             <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" />
                         }
 
-                        <span>{crypto.percentageGrowth}%</span>
+                        <span>{crypto.percentageGrowth.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})}%</span>
                     </div>
                 </div>
             </div>

@@ -20,31 +20,38 @@ import Dashboard from './components/Dashboard/Dashboard';
 import TradingMarket from './components/TradingMarket/TradingMarket';
 import NotFound from './components/NotFound/NotFound';
 
-library.add(fas, far, faCirclePlus, faTwitter, faFontAwesome)
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+library.add(fas, far, faCirclePlus, faTwitter, faFontAwesome);
+
+const queryClient = new QueryClient();
 
 export default function App() {
 
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoggedLandpage />}>
-          
-          <Route path='panel' element={<CryptoPanelPage />} />
-          <Route path='dashboard' element={<Dashboard />} />
-          <Route path='trading-market' element={<TradingMarket />} />
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoggedLandpage />}>
+            
+            <Route path='panel' element={<CryptoPanelPage />} />
+            <Route path='dashboard' element={<Dashboard />} />
+            <Route path='trading-market' element={<TradingMarket />} />
+            <Route path='*' element={<NotFound />} />
+
+          </Route>
+
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/register-user' element={<RegisterUserPage />} />
           <Route path='*' element={<NotFound />} />
-
-        </Route>
-
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register-user' element={<RegisterUserPage />} />
-        <Route path='*' element={<NotFound />} />
-        
-        {/* <div className="App">
-          <CryptoPanelPage />
-        </div> */}
-      </Routes>
-    </BrowserRouter>
+          
+          {/* <div className="App">
+            <CryptoPanelPage />
+          </div> */}
+        </Routes>
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }

@@ -9,14 +9,18 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
-import { CryptoSummary } from "../../../models/Crypto";
+import { CryptoModel, CryptoSummary } from "../../../models/Crypto";
 import WatchListCard from "./WatchListCard";
 import ChartSummary from "./CoinSummary";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 
 Chartjs.register(annotationPlugin);
 
 export default function Watchlist() {
+    const baseCoinGeckoUrl = "https://api.coingecko.com/api/v3/"
+
     const [selectedCrypto, setSelectedCrypto] = useState<CryptoSummary | null>(null);
 
     const cryptoSummaries: CryptoSummary[] = getCryptoSummariesDummyData();
@@ -24,15 +28,57 @@ export default function Watchlist() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
-    useEffect(() => {
-        const coinValue = selectedCrypto?.coinValue ?? 0;
+    const queryClient = useQueryClient();
+
+    const { isPending, error, data } = useQuery({
+        queryKey: ["watchlist"],
+        queryFn: getCoins
+    });
+
+    async function getCoins(): Promise<CryptoSummary[]> {
+        const url = baseCoinGeckoUrl + "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+    
+        try {
+            const response = await axios.get<CryptoModel[]>(url, {
+                headers: {
+                    "x-cg-demo-api-key": import.meta.env.VITE_COIN_GECKO_API_KEY
+                }
+            });
+
+            const result = response.data.map((c, i) => {
+                return {
+                    id: i,
+                    name: c.name,
+                    code: c.symbol.toUpperCase() + "/USDT",
+                    coinValue: c.current_price,
+                    percentageGrowth: c.price_change_percentage_24h,
+                    amountGrowth: c.price_change_24h,
+                    icon: c.symbol,
+                    iconUrl: c.image
+
+                } as CryptoSummary
+
+            })
+
+            return result;
+            
+        } catch(error) {
+            console.log(error);
+        }
+
+        return []
+    }
+
+
+    useEffect(function updateChart () {
+        const isNegative = (selectedCrypto?.percentageGrowth ?? 0) < 0;
 
         function positiveColor() { 
-            return (coinValue < 0 ?  "#e93e31": "#3478f6")
+            return (isNegative ?  "#e93e31": "#3478f6");
         };
 
         function positiveColorWithAlpha() { 
-            return (coinValue < 0 ?  "#e93e312A": "#3478f62A")
+            return (isNegative ?  "#e93e312A": "#3478f62A");
         };
 
         const documentStyle = getComputedStyle(document.documentElement);
@@ -147,7 +193,7 @@ export default function Watchlist() {
 
                 <div className='watchlist-content'>
                     {
-                        cryptoSummaries.map((c) => {
+                        data?.map((c) => {
                             return (
                                 <WatchListCard 
                                     key={ c.id }
@@ -172,7 +218,7 @@ export default function Watchlist() {
                                 onChange={(e: DropdownChangeEvent) => {
                                     setSelectedCrypto(e.value);
                                 }}
-                                options={cryptoSummaries}
+                                options={data}
                                 optionLabel="code"
                                 placeholder="Select a Crypto"
                                 filter

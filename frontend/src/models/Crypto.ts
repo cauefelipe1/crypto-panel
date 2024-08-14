@@ -30,7 +30,7 @@ export type CryptoModel = {
     owned: number;
   }
 
-  export interface CryptoSummary {
+  export type CryptoSummary = {
     id: number;
     name: string;
     code: string;

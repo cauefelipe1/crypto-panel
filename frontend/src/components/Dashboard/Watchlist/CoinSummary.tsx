@@ -8,28 +8,28 @@ export type ChartSummaryProps = {
 }
 
 export default function ChartSummary({ crypto }: ChartSummaryProps) {
+    function isNegative(){
+        return crypto.percentageGrowth < 0;
+    }
+
+    function getSignCssClass(){
+        return (isNegative() ? "negative" : "positive");
+    }
+
     return (
         <div className="coin-summary-container">
             
-            <div
-                className={"coin-value " + 
-                    (crypto.coinValue < 0 ? "negative" : "positive")
-                }
-            >
+            <div className={"coin-value " + getSignCssClass()}>
                 {crypto.coinValue.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
             </div>
 
-            <div
-                className={"coin-growth " + 
-                    (crypto.coinValue < 0 ? "negative" : "positive")
-                }
-            >    
+            <div className={"coin-growth " + getSignCssClass()}>    
                 <span className="amount">
                     {crypto.amountGrowth.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}
                 </span> 
 
                 {
-                    crypto.coinValue < 0 ?
+                    isNegative() ?
                     
                     /* @ts-ignore */
                     <FontAwesomeIcon icon="fa-solid fa-arrow-trend-down" /> :
