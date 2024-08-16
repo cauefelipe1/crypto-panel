@@ -31,7 +31,7 @@ export type CryptoModel = {
   }
 
   export type CryptoSummary = {
-    id: number;
+    id: string;
     name: string;
     code: string;
     coinValue: number;
@@ -39,4 +39,10 @@ export type CryptoModel = {
     amountGrowth: number;
     icon: string;
     iconUrl?: string; 
-}
+  }
+
+  export type CryptoHistoricalData = {
+    prices: Array<number>[];
+    market_caps: Array<number>[];
+    total_volumes: Array<number>[];
+  }

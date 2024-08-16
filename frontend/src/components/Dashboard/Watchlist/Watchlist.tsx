@@ -1,7 +1,6 @@
 import "./Watchlist.scss";
 
 import { useState, useEffect } from "react";
-import { getCryptoSummariesDummyData } from "./Watchlist.helpers";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Chart as Chartjs} from 'chart.js'
@@ -9,12 +8,12 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
-import { CryptoModel, CryptoSummary } from "../../../models/Crypto";
+import { CryptoHistoricalData, CryptoModel, CryptoSummary } from "../../../models/Crypto";
 import WatchListCard from "./WatchListCard";
 import ChartSummary from "./CoinSummary";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
+import { DateTime } from "luxon";
 
 Chartjs.register(annotationPlugin);
 
@@ -23,20 +22,24 @@ export default function Watchlist() {
 
     const [selectedCrypto, setSelectedCrypto] = useState<CryptoSummary | null>(null);
 
-    const cryptoSummaries: CryptoSummary[] = getCryptoSummariesDummyData();
-
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
-    const queryClient = useQueryClient();
+    //const queryClient = useQueryClient();
 
-    const { isPending, error, data } = useQuery({
+    const cryptosQuery = useQuery({
         queryKey: ["watchlist"],
         queryFn: getCoins
     });
 
+    const chartDataQuery = useQuery({
+        queryKey: ["chart", selectedCrypto?.id],
+        queryFn: getCoinChartData,
+        enabled: !!selectedCrypto
+    });
+
     async function getCoins(): Promise<CryptoSummary[]> {
-        const url = baseCoinGeckoUrl + "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+        const url = baseCoinGeckoUrl + "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false";
     
         try {
             const response = await axios.get<CryptoModel[]>(url, {
@@ -47,7 +50,7 @@ export default function Watchlist() {
 
             const result = response.data.map((c, i) => {
                 return {
-                    id: i,
+                    id: c.id,
                     name: c.name,
                     code: c.symbol.toUpperCase() + "/USDT",
                     coinValue: c.current_price,
@@ -58,7 +61,7 @@ export default function Watchlist() {
 
                 } as CryptoSummary
 
-            })
+            });
 
             return result;
             
@@ -66,11 +69,33 @@ export default function Watchlist() {
             console.log(error);
         }
 
-        return []
+        return [];
     }
 
+    async function getCoinChartData(): Promise<CryptoHistoricalData | undefined> {
+        const url = baseCoinGeckoUrl + "coins/" + selectedCrypto?.id + "/market_chart?vs_currency=USD&days=30&interval=daily";
+    
+        try {
+            const response = await axios.get<CryptoHistoricalData>(url, {
+                headers: {
+                    "x-cg-demo-api-key": import.meta.env.VITE_COIN_GECKO_API_KEY
+                }
+            });
+
+            return response.data;
+            
+        } catch(error) {
+            console.log(error);
+        }
+
+        return undefined;
+    }
 
     useEffect(function updateChart () {
+        if (!selectedCrypto) {
+            return;
+        }
+
         const isNegative = (selectedCrypto?.percentageGrowth ?? 0) < 0;
 
         function positiveColor() { 
@@ -85,80 +110,93 @@ export default function Watchlist() {
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-        
-        const data = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: selectedCrypto?.name,
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: true,
-                    borderColor: positiveColor(),
-                    tension: 1,
-                    backgroundColor: positiveColorWithAlpha()
-                }
-            ]
-        };
-        const options = {
-            maintainAspectRatio: false,
-            aspectRatio: 1,
-            plugins: {
-                annotation: {
-                    annotations: {
-                        line1: {
-                            type: 'line',
-                            yMin: 60,
-                            yMax: 60,
-                            borderColor: positiveColor(),
-                            borderWidth: 1,
-                            borderDash: [2, 2],
-                            drawTime: "afterDraw",
-                            init: true,
-                            label: {
-                                display: true,
-                                content: selectedCrypto?.coinValue,
-                                position: "start",
-                                backgroundColor: positiveColor()
+
+        getCoinChartData().then((chartData) => {
+            console.log("Data for chart", chartData);
+            
+            const prices = chartData?.prices.map((p) => {
+                return {
+                    date: DateTime.fromMillis(p[0]),
+                    value: p[1]
+                };
+            });
+
+            const data = {
+                labels: prices?.map((p) => p.date.toFormat("yyyy-MM-dd")),
+                datasets: [
+                    {
+                        label: selectedCrypto?.name,
+                        data: prices?.map(p => p.value),
+                        fill: true,
+                        borderColor: positiveColor(),
+                        tension: 1,
+                        backgroundColor: positiveColorWithAlpha()
+                    }
+                ]
+            };
+
+            const options = {
+                maintainAspectRatio: false,
+                aspectRatio: 1,
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: selectedCrypto?.coinValue,
+                                yMax: selectedCrypto?.coinValue,
+                                borderColor: positiveColor(),
+                                borderWidth: 1,
+                                borderDash: [2, 2],
+                                drawTime: "afterDraw",
+                                init: true,
+                                label: {
+                                    display: true,
+                                    content: selectedCrypto?.coinValue,
+                                    position: "start",
+                                    backgroundColor: positiveColor()
+                                }
                             }
                         }
+                    },
+                    legend: {
+                        display: false,
+                        labels: {
+                            color: textColor
+                        }
+                        // tooltips: {
+                        //     callbacks: {
+                        //        label: function(tooltipItem: any) {
+                        //               return tooltipItem.yLabel;
+                        //        }
+                        //     }
+                        // }
                     }
                 },
-                legend: {
-                    display: false,
-                    labels: {
-                        color: textColor
-                    }
-                    // tooltips: {
-                    //     callbacks: {
-                    //        label: function(tooltipItem: any) {
-                    //               return tooltipItem.yLabel;
-                    //        }
-                    //     }
-                    // }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary
+                scales: {
+                    x: {
+                        ticks: {
+                            color: textColorSecondary
+                        },
+                        grid: {
+                            color: surfaceBorder
+                        }
                     },
-                    grid: {
-                        color: surfaceBorder
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder
+                    y: {
+                        ticks: {
+                            color: textColorSecondary
+                        },
+                        grid: {
+                            color: surfaceBorder
+                        }
                     }
                 }
-            }
-        };
+            };
+    
+            setChartData(data);
+            setChartOptions(options);
+        });
 
-        setChartData(data);
-        setChartOptions(options);
     }, [selectedCrypto]);
 
     const [chartPeriod, setChartPeriod] = useState(null);
@@ -170,6 +208,16 @@ export default function Watchlist() {
         { label: '6M', value: 5 },
         { label: '1Y', value: 6 }
     ];
+
+    async function handleCryptoCardClick(crypto: CryptoSummary) {
+        try{
+            //await chartDataQuery.refetch();
+            setSelectedCrypto(crypto);
+
+        } catch(e) {
+            
+        }    
+    }
 
     return (
         <div className="watchlist-container">
@@ -193,13 +241,13 @@ export default function Watchlist() {
 
                 <div className='watchlist-content'>
                     {
-                        data?.map((c) => {
+                        cryptosQuery.data?.map((c) => {
                             return (
                                 <WatchListCard 
                                     key={ c.id }
                                     crypto={c}
                                     isSelected={c.id === selectedCrypto?.id}
-                                    onClick={(c) => setSelectedCrypto(c)}/>
+                                    onClick={handleCryptoCardClick}/>
                             );
                         })
                     }
@@ -218,7 +266,7 @@ export default function Watchlist() {
                                 onChange={(e: DropdownChangeEvent) => {
                                     setSelectedCrypto(e.value);
                                 }}
-                                options={data}
+                                options={cryptosQuery.data}
                                 optionLabel="code"
                                 placeholder="Select a Crypto"
                                 filter
