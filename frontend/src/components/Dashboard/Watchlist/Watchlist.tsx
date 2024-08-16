@@ -25,6 +25,17 @@ export default function Watchlist() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
+    const chartPeriods = [
+        { label: '1D', value: 1 },
+        { label: '1W', value: 7 },
+        { label: '1M', value: 30 },
+        { label: '3M', value: 90 },
+        { label: '6M', value: 180 },
+        { label: '1Y', value: 365 }
+    ];
+    
+    const [chartPeriod, setChartPeriod] = useState(1);
+
     //const queryClient = useQueryClient();
 
     const cryptosQuery = useQuery({
@@ -73,7 +84,11 @@ export default function Watchlist() {
     }
 
     async function getCoinChartData(): Promise<CryptoHistoricalData | undefined> {
-        const url = baseCoinGeckoUrl + "coins/" + selectedCrypto?.id + "/market_chart?vs_currency=USD&days=30&interval=daily";
+        const url = 
+            baseCoinGeckoUrl + 
+            "coins/" + selectedCrypto?.id + 
+            "/market_chart?precision=2&vs_currency=USD&days=" + chartPeriod + 
+            (chartPeriod > 1 ? "&interval=daily" : "");
     
         try {
             const response = await axios.get<CryptoHistoricalData>(url, {
@@ -122,7 +137,13 @@ export default function Watchlist() {
             });
 
             const data = {
-                labels: prices?.map((p) => p.date.toFormat("yyyy-MM-dd")),
+                labels: prices?.map((p) => {
+                    if (chartPeriod > 1) {
+                        return p.date.toFormat("yyyy-MM-dd");
+                    } else {
+                        return p.date.toFormat("HH:MM");
+                    }
+                }),
                 datasets: [
                     {
                         label: selectedCrypto?.name,
@@ -197,17 +218,7 @@ export default function Watchlist() {
             setChartOptions(options);
         });
 
-    }, [selectedCrypto]);
-
-    const [chartPeriod, setChartPeriod] = useState(null);
-    const chartPeriods = [
-        { label: '1D', value: 1 },
-        { label: '1W', value: 2 },
-        { label: '1M', value: 3 },
-        { label: '3M', value: 4 },
-        { label: '6M', value: 5 },
-        { label: '1Y', value: 6 }
-    ];
+    }, [selectedCrypto, chartPeriod]);
 
     async function handleCryptoCardClick(crypto: CryptoSummary) {
         try{
