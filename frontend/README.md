@@ -1,3 +1,4 @@
+Design reference: https://dribbble.com/shots/19995798-Coinage-Crypto-dashboard
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
